@@ -15,14 +15,18 @@ Plugin 'gmarik/Vundle.vim'
 Plugin 'vim-scripts/indentpython.vim'
 " ...
 "
-"
 Plugin 'rafi/awesome-vim-colorschemes'
+Plugin 'webdevel/tabulous'
+Plugin 'prabirshrestha/asyncomplete.vim'
 Plugin 'ghifarit53/tokyonight-vim'
+Plugin 'sheerun/vim-polyglot'
 Plugin 'pangloss/vim-javascript'
+Plugin 'mattn/emmet-vim'
 Plugin 'mxw/vim-jsx'
 Plugin 'itchyny/lightline.vim'
-Plugin 'arcticicestudio/nord-vim'
 Plugin 'vim-syntastic/syntastic'
+Plugin 'maxboisvert/vim-simple-complete'
+Plugin 'jelera/vim-javascript-syntax'
 Plugin 'scrooloose/nerdtree'
 Plugin 'nvie/vim-flake8'
 Plugin 'jistr/vim-nerdtree-tabs'
@@ -35,22 +39,30 @@ filetype plugin indent on    " required
 set splitbelow
 set splitright
 set encoding=utf-8
+
 au BufNewFile,BufRead *.py
-    \ set tabstop=4 |
-    \ set softtabstop=4 |
-    \ set shiftwidth=4 |
-    \ set textwidth=79 |
-    \ set expandtab |
-    \ set autoindent
-    \ set fileformat=unix |
+    \| set tabstop=4
+    \| set softtabstop=4
+    \| set shiftwidth=4
+    \| set textwidth=79
+    \| set expandtab
+    \| set autoindent
+    \| set fileformat=unix
+
+au BufNewFile,BufRead *.js, *.html, *.css
+    \|set tabstop=2
+    \| set softtabstop=2
+    \| set shiftwidth=2
 
 
-au BufRead,BufNewFile *.py,*.pyw,*.c,*.h 
+
 let python_highlight_all=1
+
 syntax on
-:set mouse=a 
+set mouse=a 
 set laststatus=2
 set nu
+set showtabline=2
 nnoremap <C-y > "+y
 vnoremap <C-y> "+y
 let g:Powerline_symobls = 'fancy'
@@ -66,4 +78,11 @@ colorscheme tokyonight
 
 let g:lightline = {'colorscheme' : 'tokyonight'}
 
-imap <F5> <Esc>:w<CR>:!clear;python %<CR>
+packloadall
+set runtimepath^=~/.vim/bundle/tabulous
+
+autocmd FileType python map <buffer> <F9> :w<CR>:exec '!python3' shellescape(@%, 1)<CR>
+autocmd FileType python imap <buffer> <F9> <esc>:w<CR>:exec '!python3' shellescape(@%, 1)<CR>
+nnoremap <F2> :w<CR>
+nnoremap <F3> :q<CR>
+nnoremap <F4> :NERDTree<CR>
