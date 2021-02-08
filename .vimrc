@@ -17,18 +17,17 @@ Plugin 'vim-scripts/indentpython.vim'
 "
 Plugin 'rafi/awesome-vim-colorschemes'
 Plugin 'webdevel/tabulous'
-Plugin 'prabirshrestha/asyncomplete.vim'
+Plugin 'neoclide/coc.nvim'
+Plugin 'jmcantrell/vim-virtualenv'
 Plugin 'ghifarit53/tokyonight-vim'
 Plugin 'sheerun/vim-polyglot'
 Plugin 'pangloss/vim-javascript'
 Plugin 'mattn/emmet-vim'
 Plugin 'mxw/vim-jsx'
 Plugin 'itchyny/lightline.vim'
-Plugin 'vim-syntastic/syntastic'
-Plugin 'maxboisvert/vim-simple-complete'
+"Plugin 'vim-syntastic/syntastic'
 Plugin 'jelera/vim-javascript-syntax'
 Plugin 'scrooloose/nerdtree'
-Plugin 'nvie/vim-flake8'
 Plugin 'jistr/vim-nerdtree-tabs'
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -86,3 +85,4 @@ autocmd FileType python imap <buffer> <F9> <esc>:w<CR>:exec '!python3' shellesca
 nnoremap <F2> :w<CR>
 nnoremap <F3> :q<CR>
 nnoremap <F4> :NERDTree<CR>
+let b:coc_diagnostic_disable = 1
