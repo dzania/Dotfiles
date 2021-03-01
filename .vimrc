@@ -29,6 +29,10 @@ Plugin 'itchyny/lightline.vim'
 Plugin 'jelera/vim-javascript-syntax'
 Plugin 'scrooloose/nerdtree'
 Plugin 'jistr/vim-nerdtree-tabs'
+Plugin 'junegunn/fzf'
+Plugin 'junegunn/fzf.vim'
+Plugin 'tpope/vim-fugitive'
+Plugin 'preservim/nerdcommenter'
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -48,11 +52,10 @@ au BufNewFile,BufRead *.py
     \| set autoindent
     \| set fileformat=unix
 
-au BufNewFile,BufRead *.js, *.html, *.css
-    \|set tabstop=2
+au BufNewFile,BufRead *.js,*.html,*.css      
+    \  set tabstop=2
     \| set softtabstop=2
     \| set shiftwidth=2
-
 
 
 let python_highlight_all=1
@@ -69,15 +72,17 @@ highlight Normal ctermbg=None
 autocmd StdinReadPre * let s:std_in=1
 syntax enable
 set termguicolors
+let g:prettier#autoformat = 1
+let g:prettier#autoformat_require_pragma = 0
 
 let g:tokyonight_style = 'night' " available: night, storm
 let g:tokyonight_enable_italic = 1
 
 colorscheme tokyonight
 
-let g:lightline = {'colorscheme' : 'tokyonight'}
 
-packloadall
+
+
 set runtimepath^=~/.vim/bundle/tabulous
 
 autocmd FileType python map <buffer> <F9> :w<CR>:exec '!python3' shellescape(@%, 1)<CR>
@@ -85,4 +90,15 @@ autocmd FileType python imap <buffer> <F9> <esc>:w<CR>:exec '!python3' shellesca
 nnoremap <F2> :w<CR>
 nnoremap <F3> :q<CR>
 nnoremap <F4> :NERDTree<CR>
-let b:coc_diagnostic_disable = 1
+map ; :Files<CR>
+nnoremap <F5> "+y <CR>
+let g:lightline = {
+      \ 'colorscheme': 'tokyonight',
+      \ 'active': {
+      \   'left': [ [ 'mode', 'paste' ],
+      \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
+      \ },
+      \ 'component_function': {
+      \   'gitbranch': 'FugitiveHead'
+      \ },
+      \ }
