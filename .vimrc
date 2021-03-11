@@ -10,11 +10,7 @@ call vundle#begin()
 
 " let Vundle manage Vundle, required
 Plugin 'gmarik/Vundle.vim'
-" add all your plugins here (note older versions of Vundle
-" used Bundle instead of Plugin)
 Plugin 'vim-scripts/indentpython.vim'
-" ...
-"
 Plugin 'jiangmiao/auto-pairs'
 Plugin 'rafi/awesome-vim-colorschemes'
 Plugin 'webdevel/tabulous'
@@ -24,7 +20,7 @@ Plugin 'ghifarit53/tokyonight-vim'
 Plugin 'sheerun/vim-polyglot'
 Plugin 'pangloss/vim-javascript'
 Plugin 'mattn/emmet-vim'
-Plugin 'mxw/vim-jsx'
+"Plugin 'mxw/vim-jsx'
 Plugin 'itchyny/lightline.vim'
 "Plugin 'vim-syntastic/syntastic'
 Plugin 'jelera/vim-javascript-syntax'
@@ -52,11 +48,15 @@ au BufNewFile,BufRead *.py
     \| set expandtab
     \| set autoindent
     \| set fileformat=unix
-
-au BufNewFile,BufRead *.js,*.html,*.css      
-    \  set tabstop=2
-    \| set softtabstop=2
-    \| set shiftwidth=2
+""
+"au BufNewFile,BufRead *.js,*.html,*.css      
+    "set tabstop=2
+    "set softtabstop=2
+    "set shiftwidth=2
+    "set autoindent
+    "set smarttab
+    "set cindent
+    "set expandtab
 
 
 let python_highlight_all=1
@@ -65,6 +65,8 @@ syntax on
 set laststatus=2
 set nu
 set showtabline=2
+set mouse=a
+set autoindent
 nnoremap <C-y > "+y
 vnoremap <C-y> "+y
 let g:Powerline_symobls = 'fancy'
