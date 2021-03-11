@@ -15,6 +15,7 @@ Plugin 'gmarik/Vundle.vim'
 Plugin 'vim-scripts/indentpython.vim'
 " ...
 "
+Plugin 'jiangmiao/auto-pairs'
 Plugin 'rafi/awesome-vim-colorschemes'
 Plugin 'webdevel/tabulous'
 Plugin 'neoclide/coc.nvim'
@@ -61,7 +62,6 @@ au BufNewFile,BufRead *.js,*.html,*.css
 let python_highlight_all=1
 
 syntax on
-set mouse=a 
 set laststatus=2
 set nu
 set showtabline=2
