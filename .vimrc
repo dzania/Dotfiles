@@ -20,7 +20,6 @@ Plugin 'ghifarit53/tokyonight-vim'
 Plugin 'sheerun/vim-polyglot'
 Plugin 'pangloss/vim-javascript'
 Plugin 'mattn/emmet-vim'
-"Plugin 'mxw/vim-jsx'
 Plugin 'itchyny/lightline.vim'
 "Plugin 'vim-syntastic/syntastic'
 Plugin 'jelera/vim-javascript-syntax'
@@ -30,6 +29,7 @@ Plugin 'junegunn/fzf'
 Plugin 'junegunn/fzf.vim'
 Plugin 'tpope/vim-fugitive'
 Plugin 'preservim/nerdcommenter'
+Plugin 'ryanoasis/vim-devicons'
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -49,27 +49,25 @@ au BufNewFile,BufRead *.py
     \| set autoindent
     \| set fileformat=unix
 ""
-"au BufNewFile,BufRead *.js,*.html,*.css      
-    "set tabstop=2
-    "set softtabstop=2
-    "set shiftwidth=2
-    "set autoindent
-    "set smarttab
-    "set cindent
-    "set expandtab
+au BufNewFile,BufRead *.js,*.html,*.css      
+    set tabstop=2
+    set softtabstop=2
+    set shiftwidth=2
+    set autoindent
+    set smarttab
+    set cindent
+    set expandtab
 
 
 let python_highlight_all=1
 
 syntax on
+set clipboard=unnamedplus
 set laststatus=2
 set nu
-set showtabline=2
 set mouse=a
+set showtabline=2
 set autoindent
-nnoremap <C-y > "+y
-vnoremap <C-y> "+y
-let g:Powerline_symobls = 'fancy'
 highlight Normal ctermbg=None
 autocmd StdinReadPre * let s:std_in=1
 syntax enable
@@ -77,23 +75,26 @@ set termguicolors
 let g:prettier#autoformat = 1
 let g:prettier#autoformat_require_pragma = 0
 
+"colorscheme
+colorscheme tokyonight
 let g:tokyonight_style = 'night' " available: night, storm
 let g:tokyonight_enable_italic = 1
 
-colorscheme tokyonight
 
 
 
 
 set runtimepath^=~/.vim/bundle/tabulous
-
+"remaps
 autocmd FileType python map <buffer> <F9> :w<CR>:exec '!python3' shellescape(@%, 1)<CR>
 autocmd FileType python imap <buffer> <F9> <esc>:w<CR>:exec '!python3' shellescape(@%, 1)<CR>
 nnoremap <F2> :w<CR>
 nnoremap <F3> :q<CR>
-nnoremap <F4> :NERDTree<CR>
+nnoremap <F4> :NERDTreeFind<CR>
 map ; :Files<CR>
-nnoremap <F5> "+y <CR>
+"copying
+vnoremap <C-y> "+y<CR>
+nnoremap <C-p> "+p<CR>
 let g:lightline = {
       \ 'colorscheme': 'tokyonight',
       \ 'active': {
