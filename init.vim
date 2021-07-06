@@ -10,27 +10,26 @@ call vundle#begin()
 
 " let Vundle manage Vundle, required
 Plugin 'gmarik/Vundle.vim'
+Plugin 'fatih/vim-go'
 Plugin 'vim-scripts/indentpython.vim'
-Plugin 'vim-airline/vim-airline'
 Plugin 'jiangmiao/auto-pairs'
 Plugin 'rafi/awesome-vim-colorschemes'
-Plugin 'webdevel/tabulous'
 Plugin 'neoclide/coc.nvim'
 Plugin 'chuling/equinusocio-material.vim'
-Plugin 'vimsence/vimsence'
 Plugin 'ghifarit53/tokyonight-vim'
 Plugin 'sheerun/vim-polyglot'
 Plugin 'pangloss/vim-javascript'
 Plugin 'mattn/emmet-vim'
-Plugin 'prabirshrestha/vim-lsp'
+Plugin 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plugin 'ap/vim-css-color'
 Plugin 'Brettm12345/moonlight.vim'
 Plugin 'alvan/vim-closetag'
+Plugin 'yaegassy/coc-htmldjango', {'do': 'yarn install --frozen-lockfile'}
 Plugin 'vim-python/python-syntax'
-"Plugin 'vim-syntastic/syntastic'
+Plugin 'vim-airline/vim-airline'
+Plugin 'vim-airline/vim-airline-themes'
 Plugin 'jelera/vim-javascript-syntax'
 Plugin 'scrooloose/nerdtree'
-Plugin 'jistr/vim-nerdtree-tabs'
 Plugin 'junegunn/fzf'
 Plugin 'rainglow/vim'
 Plugin 'prettier/vim-prettier', { 'do': 'yarn install' }
@@ -38,11 +37,14 @@ Plugin 'junegunn/fzf.vim'
 Plugin 'tpope/vim-fugitive'
 Plugin 'preservim/nerdcommenter'
 Plugin 'ryanoasis/vim-devicons'
+Plugin 'edkolev/tmuxline.vim'
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 filetype plugin indent on    " required
 
 
+
+au BufNewFile,BufRead *.html set filetype=htmldjango
 
 let g:python_highlight_all = 1
 set splitbelow
@@ -58,7 +60,7 @@ au BufNewFile,BufRead *.py
     \| set autoindent
     \| set fileformat=unix
 ""
-au BufNewFile,BufRead *.js,*.html,*.css      
+au BufNewFile,BufRead *.js,*.css      
     set tabstop=2
     set softtabstop=2
     set shiftwidth=2
@@ -66,7 +68,6 @@ au BufNewFile,BufRead *.js,*.html,*.css
     set smarttab
     set cindent
     set expandtab
-
 
 let python_highlight_all=1
 
@@ -77,11 +78,6 @@ set t_Co=256                         " Enable 256 colors
 set t_ut=
 set termguicolors
 set term=xterm-256color
-if exists('+termguicolors')
-  let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
-  let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
-  set termguicolors
-endif
 set laststatus=2
 set nu
 set mouse=a
@@ -97,28 +93,45 @@ highlight Normal ctermbg=None
 autocmd StdinReadPre * let s:std_in=1
 syntax enable
 let g:prettier#autoformat = 0
-let g:prettier#autoformat_require_pragma = 0
 "colorscheme
 let g:closetag_filenames = '*.html,*.xhtml,*.phtml,*.js'
 let g:closetag_close_shortcut = '<leader>>'
 
 set runtimepath^=~/.vim/bundle/tabulous
-nnoremap <C-p> :NERDTreeToggle<CR>
+
 "remaps
+nnoremap <C-p> :NERDTreeToggle<CR>
 nnoremap <C-f> :NERDTreeFind<CR>
 nnoremap <C-n> :NERDTree<CR>
 map ;  :Files<CR>
 map <C-Left> <Esc>:tabprev<CR>
 map <C-Right> <Esc>:tabnext<CR>
 vnoremap <C-y> "+y<CR>
-"let g:jellybeans_overrides = {
-"\    'background': { 'ctermbg': 'none', '256ctermbg': 'none' },
-"\    'White': {'ctermbg': '255','256ctermbg':'255'}
-"\}
-"if has('termguicolors') && &termguicolors
-    "let g:jellybeans_overrides['background']['guibg'] = 'none'
-"endif
+"
+"airline
+let g:airline_powerline_fonts = 1
+let g:airline#extensions#tabline#enabled = 1
+
+"let g:lightline = {
+      "\ 'colorscheme': 'equinusocio_material',
+      "\ 'active': {
+      "\   'left': [ [ 'mode', 'paste' ],
+      "\             [ 'gitbranch', 'readonly', 'filename', 'modified' ]]
+      "\ },
+      "\ }
+
 let g:equinusocio_material_style = 'darker'
 colorscheme equinusocio_material
-let g:airline#extensions#tabline#enabled = 1
+lua <<EOF
+require'nvim-treesitter.configs'.setup {
+  highlight = {
+    enable = true,
+    custom_captures = {
+      -- Highlight the @foo.bar capture group with the "Identifier" highlight group.
+      ["foo.bar"] = "Identifier",
+    },
+  },
+}
+EOF
+
 
