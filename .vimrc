@@ -98,7 +98,6 @@ autocmd StdinReadPre * let s:std_in=1
 syntax enable
 let g:prettier#autoformat = 0
 let g:prettier#autoformat_require_pragma = 0
-"colorscheme
 let g:closetag_filenames = '*.html,*.xhtml,*.phtml,*.js'
 let g:closetag_close_shortcut = '<leader>>'
 
@@ -111,13 +110,8 @@ map ;  :Files<CR>
 map <C-Left> <Esc>:tabprev<CR>
 map <C-Right> <Esc>:tabnext<CR>
 vnoremap <C-y> "+y<CR>
-"let g:jellybeans_overrides = {
-"\    'background': { 'ctermbg': 'none', '256ctermbg': 'none' },
-"\    'White': {'ctermbg': '255','256ctermbg':'255'}
-"\}
-"if has('termguicolors') && &termguicolors
-    "let g:jellybeans_overrides['background']['guibg'] = 'none'
-"endif
+
+"colorscheme
 let g:equinusocio_material_style = 'darker'
 colorscheme equinusocio_material
 let g:airline#extensions#tabline#enabled = 1
