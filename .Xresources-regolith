@@ -13,5 +13,6 @@ i3-wm.client.focused.color.indicator:  #8be9fd
 i3-wm.client.focused.color.child_border:  #8be9fd
 i3-wm.bar.separator.color: #8be9fd
 i3xrocks.value.color: #ffffff
-gnome.wallpaper: ~/Pictures/wallpaperflare.com_wallpaper.jpg
+i3xrocks.nominal: #ffffff
+gnome.wallpaper: ~/Pictures/catalina.jpg
 i3-wm.gaps.inner.size: 8
