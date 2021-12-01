@@ -2,17 +2,22 @@
 #include "/etc/regolith/styles/gnome"%
 
 
-gnome.icon.theme: 	Tela-circle-dark
-gnome.gtk.theme: Orchis-dark-compact
+gnome.icon.theme: Tela-circle-dark
+gnome.gtk.theme: Ayu-Dark
 i3-wm.bar.workspace.active.border.color:
 i3-wm.bar.position: top	
-i3-wm.client.focused.color.border: 	#8be9fd
-i3-wm.client.focused.color.background: #8be9fd
-i3-wm.client.focused.color.text:  #8be9fd
-i3-wm.client.focused.color.indicator:  #8be9fd
-i3-wm.client.focused.color.child_border:  #8be9fd
-i3-wm.bar.separator.color: #8be9fd
+i3-wm.client.focused.color.border: 	#f1c4c2
+i3-wm.client.focused.color.background: #f1c4c2
+i3-wm.client.focused.color.text:  #f1c4c2#
+i3-wm.client.focused.color.indicator:  #f1c4c2
+i3-wm.client.focused.color.child_border:  #f1c4c2
+i3-wm.bar.separator.color: #f1c4c2
+i3-wm.bar.separator: |
+i3-wm.window.border.size: 2
 i3xrocks.value.color: #ffffff
 i3xrocks.nominal: #ffffff
-gnome.wallpaper: ~/Pictures/catalina.jpg
-i3-wm.gaps.inner.size: 8
+rofi.icon-theme: Tela-circle-dark
+gnome.wallpaper: ~/Pictures/Wallpapers/cyborg.png
+i3-wm.bindsym.1: mod+alt+d
+i3-wm.program.1: /usr/bin/gnome-terminal --class=floating_window -e 'td --interactive'
+i3xrocks.todo.uncompleted: true
