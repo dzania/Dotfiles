@@ -119,12 +119,15 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 alias v="nvim"
+# TMUX bindings 
 alias t="tmux attach -t"
 alias tnew="tmux new -s"
 alias tk="tmux detach" 
 alias tds="tmux detach -s"
 alias tks="tmux kill-session -t"
 alias tls="tmux ls"
+alias treorder="tmux movew -r"
+# -----------------
 alias cat="batcat --paging=never"
 alias ani="ani-cli"
 
@@ -140,6 +143,8 @@ export GPG_TTY=$(tty)
 
 alias copy='xclip -sel clip'
 export PATH="$HOME/.poetry/bin:$PATH"
+
+bindkey -v
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
