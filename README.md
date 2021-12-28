@@ -1,1 +1,6 @@
-# vim for js and python 
+# Dotfiles
+Vim Neovim
+Regolith xresources
+Alacritty 
+zshrc
+tmux
