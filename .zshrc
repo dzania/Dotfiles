@@ -150,3 +150,4 @@ bindkey -v
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+[[ /usr/local/bin/kubectl ]] && source <(kubectl completion zsh)
