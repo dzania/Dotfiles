@@ -13,11 +13,9 @@ Plugin 'gmarik/Vundle.vim'
 Plugin 'fatih/vim-go'
 Plugin 'jiangmiao/auto-pairs'
 Plugin 'rafi/awesome-vim-colorschemes'
-Plugin 'neoclide/coc.nvim', {'branch': 'release'}
 Plugin 'pangloss/vim-javascript'
 Plugin 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plugin 'alvan/vim-closetag'
-Plugin 'yaegassy/coc-htmldjango', {'do': 'yarn install --frozen-lockfile'}
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
 Plugin 'scrooloose/nerdtree'
@@ -25,12 +23,15 @@ Plugin 'prettier/vim-prettier', { 'do': 'yarn install' }
 Plugin 'preservim/nerdcommenter'
 Plugin 'lukas-reineke/indent-blankline.nvim'
 Plugin 'akinsho/bufferline.nvim'
-Plugin 'edkolev/tmuxline.vim'
+Plugin 'rust-lang/rust.vim'
+Plugin 'neoclide/coc.nvim', {'branch': 'master', 'do': 'yarn install --frozen-lockfile'}
 Plugin 'tiagofumo/vim-nerdtree-syntax-highlight'
 Plugin 'chriskempson/base16-vim'
-Plugin 'andweeb/presence.nvim'
 Plugin 'tpope/vim-fugitive'
 Plugin 'ryanoasis/vim-devicons'
+Plugin 'iamcco/markdown-preview.nvim' 
+"Plugin 'neovim/nvim-lspconfig'
+"Plugin 'nvim-lua/completion-nvim'
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -77,6 +78,7 @@ set guioptions-=e
 set showtabline=2
 
 
+
 highlight Normal ctermbg=None
 autocmd StdinReadPre * let s:std_in=1
 syntax enable
@@ -101,7 +103,7 @@ nnoremap <C-n> :NERDTree<CR>
 nnoremap <C-l> :bn<CR>
 nnoremap <C-h> :bp<CR>
 nnoremap <C-x> :bd<CR>
-map ;  :Files<CR>
+map ; :
 
 
 " remap shitty terminal binding to chad esc
@@ -114,9 +116,10 @@ vnoremap <C-y> "+y<CR>
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#enabled =  0
 
+set updatetime=300
+set cmdheight=2
 "colorscheme
 colorscheme base16-default-dark
-
 lua <<EOF
 require("bufferline").setup{}
 require'nvim-treesitter.configs'.setup {
@@ -129,4 +132,9 @@ require'nvim-treesitter.configs'.setup {
   },
 }
 EOF
+" change later if have time coc good 4now 
+"require'lspconfig'.pyright.setup{}
+"require'lspconfig'.rust_analyzer.setup{}
+"require'lspconfig'.rls.setup{}
+
 
