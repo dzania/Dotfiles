@@ -102,7 +102,7 @@ nnoremap <C-n> :NERDTree<CR>
 "Buffers navigation by ctrl h ctrl l 
 nnoremap <C-l> :bn<CR>
 nnoremap <C-h> :bp<CR>
-nnoremap <C-x> :bd<CR>
+nnoremap <C-x> :bd!<CR>
 map ; :
 
 
