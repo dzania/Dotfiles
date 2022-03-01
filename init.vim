@@ -30,8 +30,6 @@ Plugin 'chriskempson/base16-vim'
 Plugin 'tpope/vim-fugitive'
 Plugin 'ryanoasis/vim-devicons'
 Plugin 'iamcco/markdown-preview.nvim' 
-"Plugin 'neovim/nvim-lspconfig'
-"Plugin 'nvim-lua/completion-nvim'
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -44,25 +42,6 @@ set splitbelow
 set splitright
 set encoding=utf-8
 
-au! BufNewFile,BufRead *.py
-    \| set tabstop=4
-    \| set softtabstop=4
-    \| set shiftwidth=4
-    \| set textwidth=79
-    \| set expandtab
-    \| set autoindent
-    \| set fileformat=unix
-""
-au! BufNewFile,BufRead *.js,*.html,*.css      
-    set tabstop=2
-    set softtabstop=2
-    set shiftwidth=2
-    set autoindent
-    set smarttab
-    set cindent
-    set expandtab
-
-
 syntax on
 set background=dark
 set clipboard=unnamedplus
@@ -71,12 +50,10 @@ set t_ut=
 set termguicolors
 set laststatus=2
 set nu
-set mouse=a
 set ai
 set smartindent
 set guioptions-=e
 set showtabline=2
-
 
 
 highlight Normal ctermbg=None
@@ -132,9 +109,3 @@ require'nvim-treesitter.configs'.setup {
   },
 }
 EOF
-" change later if have time coc good 4now 
-"require'lspconfig'.pyright.setup{}
-"require'lspconfig'.rust_analyzer.setup{}
-"require'lspconfig'.rls.setup{}
-
-
