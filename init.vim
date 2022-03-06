@@ -5,9 +5,6 @@ filetype off                  " required
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 
-" alternatively, pass a path where Vundle should install plugins
-"call vundle#begin('~/some/path/here')
-
 " let Vundle manage Vundle, required
 Plugin 'gmarik/Vundle.vim'
 Plugin 'fatih/vim-go'
@@ -45,7 +42,7 @@ set encoding=utf-8
 syntax on
 set background=dark
 set clipboard=unnamedplus
-set t_Co=256                         " Enable 256 colors
+set t_Co=256 " Enable 256 colors
 set t_ut=
 set termguicolors
 set laststatus=2
@@ -54,7 +51,11 @@ set ai
 set smartindent
 set guioptions-=e
 set showtabline=2
-
+set mouse=a
+set updatetime=300
+set cmdheight=1
+set ignorecase 
+set smartcase
 
 highlight Normal ctermbg=None
 autocmd StdinReadPre * let s:std_in=1
@@ -82,19 +83,16 @@ nnoremap <C-h> :bp<CR>
 nnoremap <C-x> :bd!<CR>
 map ; :
 
+" terminal remap to ctrl \ 
+tnoremap <C-\> <C-\><C-n>
 
-" remap shitty terminal binding to chad esc
-tnoremap <Esc> <C-\><C-n>
-
-"copy to sysstem clipboard
+"copy to system clipboard
 vnoremap <C-y> "+y<CR>
 "
 "airline
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#enabled =  0
 
-set updatetime=300
-set cmdheight=2
 "colorscheme
 colorscheme base16-default-dark
 lua <<EOF
