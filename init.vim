@@ -101,7 +101,9 @@ map <C-t> :terminal<CR>
 tnoremap <C-\> <C-\><C-n>
 
 "copy to system clipboard
+"!!! Need to have xclip installed to work
 vnoremap <C-y> "+y<CR>
+nnoremap <C-y> "+y<CR>
 "
 "airline
 let g:airline_powerline_fonts = 1
