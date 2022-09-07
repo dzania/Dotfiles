@@ -10,8 +10,8 @@ Plugin 'gmarik/Vundle.vim'
 " dev
 Plugin 'rust-lang/rust.vim'
 Plugin 'neoclide/coc.nvim', {'branch': 'master', 'do': 'yarn install --frozen-lockfile'}
-Plugin 'jiangmiao/auto-pairs'
 Plugin 'alvan/vim-closetag'
+Plugin 'petobens/poet-v'
 " cosmetic
 Plugin 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plugin 'vim-airline/vim-airline'
@@ -28,6 +28,11 @@ Plugin 'ryanoasis/vim-devicons'
 Plugin 'iamcco/markdown-preview.nvim' 
 Plugin 'nvim-lua/plenary.nvim'
 Plugin 'nvim-telescope/telescope.nvim'
+Plugin 'mfussenegger/nvim-dap'
+Plugin 'rcarriga/nvim-dap-ui'
+Plugin 'glacambre/firenvim', { 'do': { _ -> firenvim#install(0) } }
+Plugin 'romgrk/barbar.nvim'
+Plugin 'rafi/awesome-vim-colorschemes'
 
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -101,9 +106,7 @@ map <C-t> :terminal<CR>
 tnoremap <C-\> <C-\><C-n>
 
 "copy to system clipboard
-"!!! Need to have xclip installed to work
 vnoremap <C-y> "+y<CR>
-nnoremap <C-y> "+y<CR>
 "
 "airline
 let g:airline_powerline_fonts = 1
@@ -121,10 +124,21 @@ nmap gt <Plug>(coc-type-definition)
 nmap gr <Plug>(coc-references)
 nmap <leader>r <Plug>(coc-rename)
 nmap <leader>I <Plug>(coc-format)
+" Scroll popup 
+nnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
+nnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
+inoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(1)\<cr>" : "\<Right>"
+inoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(0)\<cr>" : "\<Left>"
+vnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
+vnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
 
 "colorscheme
 let base16colorspace=256
-colorscheme base16-tomorrow-night
+colorscheme base17-tomorrow-night
+highlight CocMenuSel ctermbg=19 guibg=#222222
+"colorscheme jellybeans
+
+
 
 lua <<EOF
 require("bufferline").setup{}
@@ -133,4 +147,23 @@ require'nvim-treesitter.configs'.setup {
     enable = true,
   },
 }
+ local dap = require('dap')
+ dap.adapters.python = {
+   type = 'executable';
+   command = os.getenv('HOME') .. '/.virtualenvs/tools/bin/python';
+   args = { '-m', 'debugpy.adapter' };
+ }
+local dap = require('dap')
+dap.configurations.python = {
+{
+type = 'python';
+request = 'launch';
+name = "Launch file";
+program = "${file}";
+pythonPath = function()
+  return '/usr/bin/python'
+end;
+},
+}
+
 EOF
