@@ -24,7 +24,7 @@ Plugin 'akinsho/bufferline.nvim'
 Plugin 'tiagofumo/vim-nerdtree-syntax-highlight'
 Plugin 'chriskempson/base16-vim'
 Plugin 'tpope/vim-fugitive'
-Plugin 'ryanoasis/vim-devicons'
+Plugin 'nvim-tree/nvim-web-devicons'
 Plugin 'iamcco/markdown-preview.nvim' 
 Plugin 'nvim-lua/plenary.nvim'
 Plugin 'nvim-telescope/telescope.nvim'
@@ -79,6 +79,8 @@ autocmd StdinReadPre * let s:std_in=1
 syntax enable
 
 "Prettier
+let g:prettier#config#tab_width = 2
+let g:prettier#config#config_precedence = 'file-override'
 let g:prettier#autoformat = 0
 "Rust autoformat
 let g:rustfmt_autosave = 1
@@ -89,9 +91,9 @@ let g:closetag_close_shortcut = '<leader>>'
 set runtimepath^=~/.vim/bundle/tabulous
 
 "remaps nerdtree
-nnoremap <C-p> :NERDTreeToggle<CR>
-nnoremap <C-f> :NERDTreeFind<CR>
-nnoremap <C-n> :NERDTree<CR>
+nnoremap <C-t> :NERDTreeToggle<CR>
+nnoremap <C-p> :NERDTreeFind<CR>
+nnoremap <C-n> :NERDTreeToggle<CR>
 
 
 "Buffers navigation by ctrl h ctrl l 
@@ -134,14 +136,13 @@ vnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(
 
 "colorscheme
 let base16colorspace=256
-colorscheme base17-tomorrow-night
+colorscheme base16-tomorrow-night
 highlight CocMenuSel ctermbg=19 guibg=#222222
-"colorscheme jellybeans
-
 
 
 lua <<EOF
 require("bufferline").setup{}
+require'nvim-web-devicons'.get_icons()
 require'nvim-treesitter.configs'.setup {
   highlight = {
     enable = true,
