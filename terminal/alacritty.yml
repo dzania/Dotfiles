@@ -1,6 +1,5 @@
-schemes:
 font:
   normal:
     family: Iosevka
     style: Medium
-  size: 12
+  size: 11
