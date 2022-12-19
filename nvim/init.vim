@@ -20,12 +20,13 @@ Plug 'junegunn/fzf.vim'
 
 "LSP 
 Plug 'neovim/nvim-lspconfig'
-Plug 'nvim-lua/lsp_extensions.nvim'
+Plug 'nvim-lua/lsp_extensions.nvim' 
 Plug 'hrsh7th/cmp-nvim-lsp', {'branch': 'main'}
 Plug 'hrsh7th/cmp-buffer', {'branch': 'main'}
 Plug 'hrsh7th/cmp-path', {'branch': 'main'}
 Plug 'hrsh7th/nvim-cmp', {'branch': 'main'}
 Plug 'ray-x/lsp_signature.nvim'
+Plug 'williamboman/mason.nvim'
 
 "Telescope
 Plug 'nvim-lua/plenary.nvim'
@@ -42,16 +43,12 @@ Plug 'stephpy/vim-yaml'
 Plug 'rust-lang/rust.vim'
 Plug 'rhysd/vim-clang-format'
 
-Plug 'projekt0n/github-nvim-theme'
-
-
 call plug#end()
-set encoding=utf-8
 
+set encoding=utf-8
 let g:python_highlight_all = 1
 set splitbelow
 set splitright
-set encoding=utf-8
 
 syntax on
 set background=dark
@@ -65,7 +62,6 @@ set smartindent
 set guioptions-=e
 set showtabline=2
 set mouse=a
-set updatetime=300
 set cmdheight=1
 set ignorecase
 set smartcase
@@ -75,19 +71,23 @@ set undodir=~/.vimdid
 set undofile
 set number relativenumber
 set nu rnu
-set updatetime=300
 
 autocmd FileType javascriptreact setlocal shiftwidth=2 tabstop=2
 autocmd FileType typescript setlocal shiftwidth=2 tabstop=2
 autocmd FileType typescriptreact setlocal shiftwidth=2 tabstop=2
 autocmd FileType html       setlocal shiftwidth=2 tabstop=2
 autocmd FileType python     setlocal shiftwidth=4 softtabstop=4 expandtab
-autocmd FileType NvimTree setlocal cursorline
+
+"Highlight in nerdtree
+autocmd VimEnter,WinEnter,BufWinEnter NvimTree* setlocal cursorline 
+autocmd VimEnter,WinEnter,BufWinEnter NvimTree* setlocal guicursor="a:noCursor"
+ 
 "
 filetype plugin on
 highlight Normal ctermbg=None
 autocmd StdinReadPre * let s:std_in=1
 syntax enable
+hi LineNr guibg=none guifg=none
 
 "Buffers navigation by ctrl h ctrl l
 nnoremap <C-l> :bn<CR>
@@ -125,18 +125,13 @@ nnoremap <C-p> :NvimTreeToggle<CR>
 
 autocmd CursorHold,CursorHoldI * :lua require'lsp_extensions'.inlay_hints{ only_current_line = true }
 
-
-
-
-
 lua <<EOF
 require("catppuccin").setup {
     color_overrides = {
         all = {
-            text = "#ffffff",
-            base = "#181818",
-            mantle = "#181818",
-            crust = "#181818",
+		base = "#202124",
+		mantle = "#202124",
+		crust = "#202124",
         },
     }
 }
@@ -160,7 +155,8 @@ require('telescope').setup{
     },
     pickers = { find_files = { hidden = true } },
     prompt_position = "bottom",
-    prompt_prefix = ">  ",
+    prompt_prefix = "   ",
+    selection_caret = "  ",
     selection_strategy = "reset",
     sorting_strategy = "descending",
     layout_strategy = "horizontal",
@@ -173,20 +169,18 @@ require('telescope').setup{
     results_height = 1,
     results_width = 0.8,
     border = {},
-    borderchars = { '─', '│', '─', '│', '╭', '╮', '╯', '╰'},
+    borderchars = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" },
     color_devicons = true,
     use_less = true,
   }
 }
 EOF
 
-
 lua <<EOF
+require("mason").setup()
 require("bufferline").setup{}
 require'nvim-web-devicons'.get_icons()
 require('goto-preview').setup{default_mappings = true}
-
-
 
 local on_attach = function(client, bufnr)
   -- Mappings.
@@ -214,7 +208,9 @@ lsp.rust_analyzer.setup {
               enableExperimental = true,
           },
 }}}
-local servers = { 'pyright', 'rust_analyzer', 'clangd', 'tsserver', 'jsonls', "gopls", "dockerls", "cssls", "yamlls"}
+
+local servers = { 'pyright', 'rust_analyzer', 'clangd', 'tsserver', 
+'jsonls', "gopls", "dockerls", "cssls", "yamlls"}
 for _, lsp in pairs(servers) do
   require('lspconfig')[lsp].setup {
     on_attach = on_attach,
@@ -275,7 +271,7 @@ vim.api.nvim_create_autocmd("CursorHold", {
   buffer = bufnr,
   callback = function()
     local opts = {
-      focusable = false,
+      focusable = true,
       close_events = { "BufLeave", "CursorMoved", "InsertEnter", "FocusLost" },
       border = 'rounded',
       source = 'always',
@@ -296,6 +292,7 @@ vim.o.updatetime = 250
 vim.cmd [[autocmd! CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, {focus=false})]]
 EOF
 
+"treesitter
 lua <<EOF
 require'nvim-treesitter.configs'.setup {
   -- A list of parser names, or "all"
@@ -339,6 +336,7 @@ require'nvim-treesitter.configs'.setup {
 }
 EOF
 
+"Lualine
 lua <<EOF
 local status_ok, lualine = pcall(require, "lualine")
 if not status_ok then
@@ -361,7 +359,7 @@ local diagnostics = {
 
 local diff = {
 	"diff",
-	colored = false,
+	colored = true,
 	symbols = { added = " ", modified = " ", removed = " " }, -- changes diff symbols
   cond = hide_in_width
 }
@@ -369,7 +367,7 @@ local diff = {
 local mode = {
 	"mode",
 	fmt = function(str)
-		return "-- " .. str .. " --"
+		return " " .. str .. " 🐈"
 	end,
 }
 
@@ -403,6 +401,7 @@ lualine.setup({
 		section_separators = { left = "", right = "" },
 		disabled_filetypes = { "alpha", "dashboard", "NvimTree", "Outline" },
 		always_divide_middle = true,
+		theme = "catppuccin",
 	},
 	sections = {
 		lualine_a = { mode },
@@ -425,12 +424,81 @@ lualine.setup({
 })
 EOF
 
+"Nvimtree
 lua <<EOF
-require'nvim-tree'.setup{
-	update_cwd = true,
-	update_focused_file = {
-	    enable = true,
-	    update_cwd = true,
-	}
-	}
+require("nvim-tree").setup({
+  filters = {
+    dotfiles = false,
+  },
+  disable_netrw = true,
+  hijack_netrw = true,
+  open_on_setup = false,
+  ignore_ft_on_setup = { "alpha" },
+  hijack_cursor = false,
+  hijack_unnamed_buffer_when_opening = false,
+  update_cwd = true,
+  update_focused_file = {
+    enable = true,
+    update_cwd = false,
+  },
+  view = {
+    adaptive_size = true,
+    side = "left",
+    width = 25,
+    hide_root_folder = true,
+  },
+  git = {
+    enable = false,
+    ignore = true,
+  },
+  filesystem_watchers = {
+    enable = true,
+  },
+  actions = {
+    open_file = {
+      resize_window = true,
+    },
+  },
+  renderer = {
+    highlight_git = false,
+    highlight_opened_files = "none",
+
+    indent_markers = {
+      enable = true,
+    },
+
+    icons = {
+      show = {
+        file = true,
+        folder = true,
+        folder_arrow = true,
+        git = false,
+      },
+
+      glyphs = {
+        default = "",
+        symlink = "",
+        folder = {
+          default = "",
+          empty = "",
+          empty_open = "",
+          open = "",
+          symlink = "",
+          symlink_open = "",
+          arrow_open = "",
+          arrow_closed = "",
+        },
+        git = {
+          unstaged = "✗",
+          staged = "✓",
+          unmerged = "",
+          renamed = "➜",
+          untracked = "★",
+          deleted = "",
+          ignored = "◌",
+        },
+      },
+    },
+  },
+})
 EOF
