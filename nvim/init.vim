@@ -8,6 +8,9 @@ Plug 'nvim-tree/nvim-web-devicons'
 Plug 'nvim-lualine/lualine.nvim'
 Plug 'chriskempson/base16-vim'
 Plug 'catppuccin/nvim', { 'as': 'catppuccin' }
+Plug 'projekt0n/github-nvim-theme'
+Plug 'arkav/lualine-lsp-progress'
+Plug 'goolord/alpha-nvim'
 
 "tools
 Plug 'sindrets/diffview.nvim'
@@ -17,6 +20,7 @@ Plug 'tpope/vim-fugitive'
 Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
 Plug 'nvim-tree/nvim-tree.lua'
 Plug 'junegunn/fzf.vim'
+Plug 'puremourning/vimspector'
 
 "LSP 
 Plug 'neovim/nvim-lspconfig'
@@ -27,6 +31,7 @@ Plug 'hrsh7th/cmp-path', {'branch': 'main'}
 Plug 'hrsh7th/nvim-cmp', {'branch': 'main'}
 Plug 'ray-x/lsp_signature.nvim'
 Plug 'williamboman/mason.nvim'
+Plug 'williamboman/mason-lspconfig.nvim',
 
 "Telescope
 Plug 'nvim-lua/plenary.nvim'
@@ -209,17 +214,21 @@ lsp.rust_analyzer.setup {
           },
 }}}
 
-local servers = { 'pyright', 'rust_analyzer', 'clangd', 'tsserver', 
-'jsonls', "gopls", "dockerls", "cssls", "yamlls"}
-for _, lsp in pairs(servers) do
-  require('lspconfig')[lsp].setup {
-    on_attach = on_attach,
-    flags = {
-      -- This will be the default in neovim 0.7+
-      debounce_text_changes = 150,
-    }
-  }
-end
+-- local servers = { 'pyright', 'rust_analyzer', 'clangd', 'tsserver', 
+-- 'jsonls', "gopls", "dockerls", "cssls", "yamlls"}
+
+
+-- Ensure the servers above are installed
+require("mason-lspconfig").setup_handlers {
+-- The first entry (without a key) will be the default handler
+-- and will be called for each installed server that doesn't have
+-- a dedicated handler.
+function (server_name) -- default handler (optional)
+    require("lspconfig")[server_name].setup {
+	on_attach = on_attach
+}
+end,
+}
 local cmp = require'cmp'
 local lspkind = require('lspkind')
 cmp.setup {
@@ -367,7 +376,7 @@ local diff = {
 local mode = {
 	"mode",
 	fmt = function(str)
-		return " " .. str .. " 🐈"
+		return " 🐈 " .. str .. " "
 	end,
 }
 
@@ -385,13 +394,14 @@ local branch = {
 
 local location = {
 	"location",
-	padding = 0,
+	padding = 2,
 }
 
 
 local spaces = function()
 	return "spaces: " .. vim.api.nvim_buf_get_option(0, "shiftwidth")
 end
+
 
 lualine.setup({
 	options = {
@@ -405,17 +415,15 @@ lualine.setup({
 	},
 	sections = {
 		lualine_a = { mode },
-		lualine_b = { branch, diagnostics },
-		lualine_c = {},
-		-- lualine_x = { "encoding", "fileformat", "filetype" },
-		lualine_x = { diff, spaces, "encoding", filetype },
-		lualine_y = { location },
+		lualine_b = { branch },
+		lualine_c = { lsp_progress },
+		-- lualine_x = { "encoding", "fileformat", "filetype" }
+		lualine_x = { diagnostics, diff,  "encoding", filetype },
 	},
 	inactive_sections = {
 		lualine_a = {},
 		lualine_b = {},
 		lualine_c = { "filename" },
-		lualine_x = { "location" },
 		lualine_y = {},
 		lualine_z = {},
 	},
