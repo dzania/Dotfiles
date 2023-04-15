@@ -3,11 +3,12 @@
 
 # terminal emulator
 super + Return
-  alacritty	
+  alacritty
 
 # program launcher
 super + @space
-  ~/.config/rofi/launchers/type-5/launcher.sh
+  ~/.config/rofi/launchers/type-2/launcher.sh
+
 # program launcher
 super + shift + Return
   firefox
@@ -19,7 +20,7 @@ super + Escape
 # bspwm hotkeys
 
 # quit/restart bspwm
-super + shift + r
+super + ctrl + r
 	bspc wm -r
 
 # close and kill
@@ -29,7 +30,10 @@ super + shift + q
 
 # alternate between the tiled and monocle layout
 super + m
-	bspc desktop -l next
+      bspc desktop -l next
+
+super + shift + r
+  bspc node @/ -R 90
 
 # send the newest marked node to the newest preselected node
 super + y
@@ -38,6 +42,9 @@ super + y
 # swap the current node and the biggest node
 super + g
 	bspc node -s biggest
+
+super + shift + e
+	emacs
 
 # Logout
 super + shift + p
@@ -123,8 +130,10 @@ super + alt + shift + {h,j,k,l}
 # move a floating window
 super + {Left,Down,Up,Right}
 	bspc node -v {-20 0,0 20,0 -20,20 0}
-#
-# close and kill
-# super + {_,shift + }w
+
+# Rotate tree
+super + shift + {d,a}
+    bspc node @/ -C {forward,backward}
+
 super + shift + n
   dolphin

@@ -3,7 +3,6 @@
 pkill -x sxhkd &
 sxhkd &
 picom &
-feh --bg-scale ~/Pictures/wallpaperflare.com_wallpaper.jpg & 
 setxkbmap -option caps:escape &
 
 bspc monitor -d I II III IV V VI VII VIII  IX X
@@ -22,6 +21,6 @@ bspc config ignore_ewmh_focus true
 bspc rule -a dolphin state=floating
 bspc rule -a spectacle state=floating 
 bspc rule -a Zathura state=tiled
-bspc rule -a Emacs state=tiled desktop='^4'
+bspc rule -a Emacs state=tiled
 bspc rule -a discord desktop='^3' follow=off focus=off
-bspc rule -a Steam desktop='^4' follow=off focus=off state=floating
+bspc rule -a Steam desktop='^4' follow=off focus=off state=tiled
