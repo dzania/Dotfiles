@@ -20,7 +20,9 @@ Plug 'tpope/vim-fugitive'
 Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
 Plug 'nvim-tree/nvim-tree.lua'
 Plug 'junegunn/fzf.vim'
-Plug 'puremourning/vimspector'
+Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && npx --yes yarn install' }
+"Formatting
+Plug 'mhartington/formatter.nvim'
 
 "LSP 
 Plug 'neovim/nvim-lspconfig'
@@ -47,6 +49,12 @@ Plug 'cespare/vim-toml', {'branch': 'main'}
 Plug 'stephpy/vim-yaml'
 Plug 'rust-lang/rust.vim'
 Plug 'rhysd/vim-clang-format'
+"Writing
+
+Plug 'junegunn/goyo.vim'
+Plug 'junegunn/limelight.vim'
+Plug 'reedes/vim-colors-pencil'
+Plug 'subnut/vim-iawriter'
 
 call plug#end()
 
@@ -76,6 +84,7 @@ set undodir=~/.vimdid
 set undofile
 set number relativenumber
 set nu rnu
+set noswapfile
 
 autocmd FileType javascriptreact setlocal shiftwidth=2 tabstop=2
 autocmd FileType typescript setlocal shiftwidth=2 tabstop=2
@@ -115,6 +124,8 @@ nnoremap <leader>S <cmd>lua require('telescope.builtin').live_grep()<cr>
 nnoremap <leader>s <cmd>lua require('telescope.builtin').current_buffer_fuzzy_find()<cr>
 nnoremap <leader>b <cmd>lua require('telescope.builtin').buffers()<cr>
 nnoremap <leader>j <cmd>lua require('telescope.builtin').jumplist()<cr>
+
+"format
 
 "goto-preview
 nnoremap gpd <cmd>lua require('goto-preview').goto_preview_definition()<CR>
@@ -186,6 +197,19 @@ require("mason").setup()
 require("bufferline").setup{}
 require'nvim-web-devicons'.get_icons()
 require('goto-preview').setup{default_mappings = true}
+require("ibl").setup({
+	indent = {
+		char = "▏", -- This is a slightly thinner char than the default one, check :help ibl.config.indent.char
+	},
+	scope = {
+       enabled = true,
+       show_start = false,
+       show_end = false,
+       injected_languages = false,
+       highlight = { "Function", "Label" },
+       priority = 500,
+   }
+})
 
 local on_attach = function(client, bufnr)
   -- Mappings.
@@ -314,20 +338,9 @@ require'nvim-treesitter.configs'.setup {
   -- Recommendation: set to false if you don't have `tree-sitter` CLI installed locally
   auto_install = true,
 
-  -- List of parsers to ignore installing (for "all")
-
-  ---- If you need to change the installation directory of the parsers (see -> Advanced Setup)
-  -- parser_install_dir = "/some/path/to/store/parsers", -- Remember to run vim.opt.runtimepath:append("/some/path/to/store/parsers")!
-
   highlight = {
     -- `false` will disable the whole extension
     enable = true,
-
-    -- NOTE: these are the names of the parsers and not the filetype. (for example if you want to
-    -- disable highlighting for the `tex` filetype, you need to include `latex` in this list as this is
-    -- the name of the parser)
-    -- list of language that will be disabled
-    -- Or use a function for more flexibility, e.g. to disable slow treesitter highlight for large files
     disable = function(lang, buf)
         local max_filesize = 100 * 1024 -- 100 KB
         local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
@@ -335,11 +348,6 @@ require'nvim-treesitter.configs'.setup {
             return true
         end
     end,
-
-    -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
-    -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
-    -- Using this option may slow down your editor, and you may see some duplicate highlights.
-    -- Instead of true it can also be a list of languages
     additional_vim_regex_highlighting = false,
   },
 }
@@ -440,8 +448,6 @@ require("nvim-tree").setup({
   },
   disable_netrw = true,
   hijack_netrw = true,
-  open_on_setup = false,
-  ignore_ft_on_setup = { "alpha" },
   hijack_cursor = false,
   hijack_unnamed_buffer_when_opening = false,
   update_cwd = true,
@@ -453,7 +459,6 @@ require("nvim-tree").setup({
     adaptive_size = true,
     side = "left",
     width = 25,
-    hide_root_folder = true,
   },
   git = {
     enable = false,
@@ -510,3 +515,60 @@ require("nvim-tree").setup({
   },
 })
 EOF
+
+" formatting
+lua <<EOF
+local util = require "formatter.util"
+-- Provides the Format, FormatWrite, FormatLock, and FormatWriteLock commands
+require("formatter").setup {
+  -- Enable or disable logging
+  logging = true,
+  -- Set the log level
+  log_level = vim.log.levels.WARN,
+  -- All formatter configurations are opt-in
+  filetype = {
+    -- Formatter configurations for filetype "lua" go here
+    -- and will be executed in order
+    lua = {
+      -- "formatter.filetypes.lua" defines default configurations for the
+      -- "lua" filetype
+      require("formatter.filetypes.lua").stylua,
+
+      -- You can also define your own configuration
+      function()
+        -- Supports conditional formatting
+        if util.get_current_buffer_file_name() == "special.lua" then
+          return nil
+        end
+
+        -- Full specification of configurations is down below and in Vim help
+        -- files
+        return {
+          exe = "stylua",
+          args = {
+            "--search-parent-directories",
+            "--stdin-filepath",
+            util.escape_path(util.get_current_buffer_file_path()),
+            "--",
+            "-",
+          },
+          stdin = true,
+        }
+      end
+    },
+
+    -- Use the special "*" filetype for defining formatter configurations on
+    -- any filetype
+    ["*"] = {
+      -- "formatter.filetypes.any" defines default configurations for any
+      -- filetype
+      require("formatter.filetypes.any").remove_trailing_whitespace
+    }
+  }
+}
+EOF
+nnoremap <silent> <leader>f :Format<CR>
+nnoremap <silent> <leader>F :FormatWrite<CR>
+
+nmap <C-s> <Plug>MarkdownPreview
+nmap <M-s> <Plug>MarkdownPreviewStop
