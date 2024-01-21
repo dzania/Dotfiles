@@ -24,9 +24,9 @@ Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && npx --yes yarn install' 
 "Formatting
 Plug 'mhartington/formatter.nvim'
 
-"LSP 
+"LSP
 Plug 'neovim/nvim-lspconfig'
-Plug 'nvim-lua/lsp_extensions.nvim' 
+Plug 'nvim-lua/lsp_extensions.nvim'
 Plug 'hrsh7th/cmp-nvim-lsp', {'branch': 'main'}
 Plug 'hrsh7th/cmp-buffer', {'branch': 'main'}
 Plug 'hrsh7th/cmp-path', {'branch': 'main'}
@@ -34,6 +34,9 @@ Plug 'hrsh7th/nvim-cmp', {'branch': 'main'}
 Plug 'ray-x/lsp_signature.nvim'
 Plug 'williamboman/mason.nvim'
 Plug 'williamboman/mason-lspconfig.nvim',
+Plug 'williamboman/mason.nvim'
+Plug 'jose-elias-alvarez/null-ls.nvim'
+Plug 'jay-babu/mason-null-ls.nvim'
 
 "Telescope
 Plug 'nvim-lua/plenary.nvim'
@@ -93,9 +96,9 @@ autocmd FileType html       setlocal shiftwidth=2 tabstop=2
 autocmd FileType python     setlocal shiftwidth=4 softtabstop=4 expandtab
 
 "Highlight in nerdtree
-autocmd VimEnter,WinEnter,BufWinEnter NvimTree* setlocal cursorline 
+autocmd VimEnter,WinEnter,BufWinEnter NvimTree* setlocal cursorline
 autocmd VimEnter,WinEnter,BufWinEnter NvimTree* setlocal guicursor="a:noCursor"
- 
+
 "
 filetype plugin on
 highlight Normal ctermbg=None
@@ -194,6 +197,7 @@ EOF
 
 lua <<EOF
 require("mason").setup()
+require("mason-null-ls").setup({})
 require("bufferline").setup{}
 require'nvim-web-devicons'.get_icons()
 require('goto-preview').setup{default_mappings = true}
@@ -228,8 +232,8 @@ end
 --- language servers
 local lsp = require'lspconfig'
 
-lsp.rust_analyzer.setup {                
-    settings = {                      
+lsp.rust_analyzer.setup {
+    settings = {
         ["rust-analyzer"] = {
           diagnostics = {
               enable = true,
@@ -238,7 +242,7 @@ lsp.rust_analyzer.setup {
           },
 }}}
 
--- local servers = { 'pyright', 'rust_analyzer', 'clangd', 'tsserver', 
+-- local servers = { 'pyright', 'rust_analyzer', 'clangd', 'tsserver',
 -- 'jsonls', "gopls", "dockerls", "cssls", "yamlls"}
 
 
@@ -265,8 +269,12 @@ cmp.setup {
   },
 
     window = {
-      completion = cmp.config.window.bordered(),
-      documentation = cmp.config.window.bordered(),
+    completion = { -- rounded border; thin-style scrollbar
+      border = 'rounded',
+    },
+    documentation = { -- no border; native-style scrollbar
+    	border = 'rounded',
+    },
     },
 
       mapping = {
@@ -320,6 +328,7 @@ vim.diagnostic.config({
   underline = true,
   update_in_insert = false,
   severity_sort = false,
+
 })
 vim.o.updatetime = 250
 vim.cmd [[autocmd! CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, {focus=false})]]
@@ -567,7 +576,7 @@ require("formatter").setup {
   }
 }
 EOF
-nnoremap <silent> <leader>f :Format<CR>
+nnoremap <silent> <leader>f :lua vim.lsp.buf.format() <CR>
 nnoremap <silent> <leader>F :FormatWrite<CR>
 
 nmap <C-s> <Plug>MarkdownPreview
