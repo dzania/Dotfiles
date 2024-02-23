@@ -1,9 +1,4 @@
--- See `:help mapleader`
---  NOTE: Must happen before plugins are required (otherwise wrong leader will be used)
-
 -- [[ Install `lazy.nvim` plugin manager ]]
---    https://github.com/folke/lazy.nvim
---    `:help lazy.nvim.txt` for more info
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
 if not vim.loop.fs_stat(lazypath) then
   vim.fn.system {
@@ -19,11 +14,6 @@ vim.opt.rtp:prepend(lazypath)
 
 
 -- [[ Configure plugins ]]
--- NOTE: Here is where you install your plugins.
---  You can configure plugins using the `config` key.
---
---  You can also configure plugins after the setup call,
---    as they will be available in your neovim runtime.
 require('lazy').setup({
   -- NOTE: First, some plugins that don't require any configuration
 
@@ -90,9 +80,17 @@ require('lazy').setup({
     -- Add indentation guides even on blank lines
     'lukas-reineke/indent-blankline.nvim',
     -- Enable `lukas-reineke/indent-blankline.nvim`
-    -- See `:help ibl`
     main = 'ibl',
-    opts = {},
+    opts = {
+    scope = {
+       enabled = true,
+       show_start = false,
+       show_end = false,
+       injected_languages = false,
+       highlight = { "Function", "Label" },
+       priority = 500,
+   }
+    },
   },
 
   -- "gc" to comment visual regions/lines
@@ -139,6 +137,8 @@ require('lazy').setup({
 
 -- Make line numbers default
 vim.wo.number = true
+-- Relative numbers
+vim.wo.relativenumber = true
 
 -- Enable mouse mode
 vim.o.mouse = 'a'
@@ -428,6 +428,11 @@ cmp.setup {
   completion = {
     completeopt = 'menu,menuone,noinsert',
   },
+  window = {
+    completion = { -- rounded border; thin-style scrollbar
+      border = 'rounded',
+    },
+  },
   mapping = cmp.mapping.preset.insert {
     ['<C-n>'] = cmp.mapping.select_next_item(),
     ['<C-p>'] = cmp.mapping.select_prev_item(),
@@ -472,6 +477,7 @@ vim.api.nvim_set_keymap('n', '<C-l>', ':bn<CR>', { noremap = true, silent = true
 vim.api.nvim_set_keymap('n', '<C-h>', ':bp<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<C-x>', ':bd!<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', ';', ':', { noremap = true })
+vim.api.nvim_set_keymap('n', '<leader>f', '<cmd>lua vim.lsp.buf.format()<CR>', { noremap = true, silent = true })
 
 
 
@@ -538,14 +544,14 @@ lualine.setup({
 	sections = {
 		lualine_a = { mode },
 		lualine_b = { branch },
-		-- lualine_c = { "filename", diagnostics },
+                 lualine_c = { "filename", diagnostics },
 		-- lualine_x = { "encoding", "fileformat", "filetype" }
 		lualine_x = {  "encoding", filetype },
 	},
 	inactive_sections = {
 		lualine_a = {},
 		lualine_b = {},
-		lualine_c = { "filename", diagnostics},
+		lualine_c = { "filename"},
 		lualine_y = {},
 		lualine_z = {},
 	},
@@ -555,19 +561,22 @@ lualine.setup({
 
 
 -- blankline
+
 require("ibl").setup({
-	indent = {
+      indent = {
 		char = "▏", -- This is a slightly thinner char than the default one, check :help ibl.config.indent.char
 	},
-	scope = {
+    scope = {
        enabled = true,
-       show_start = true,
+       show_start = false,
        show_end = false,
        injected_languages = false,
        highlight = { "Function", "Label" },
        priority = 500,
    }
 })
+
+
 -- Diagnostic
 vim.api.nvim_create_autocmd("CursorHold", {
   buffer = bufnr,
@@ -584,7 +593,7 @@ vim.api.nvim_create_autocmd("CursorHold", {
   end
 })
 vim.diagnostic.config({
-  virtual_text = true,
+  virtual_text = false,
   signs = true,
   underline = true,
   update_in_insert = false,
