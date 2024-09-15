@@ -167,7 +167,6 @@ vim.o.timeoutlen = 300
 -- Set completeopt to have a better completion experience
 vim.o.completeopt = 'menuone,noselect'
 
--- NOTE: You should make sure your terminal supports this
 vim.o.termguicolors = true
 vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
@@ -552,7 +551,7 @@ require("ibl").setup({
     show_start = false,
     show_end = false,
     injected_languages = false,
-    highlight = { "Function", "Label" },
+    highlight = {},
     priority = 500,
   }
 })

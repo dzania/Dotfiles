@@ -1,6 +1,5 @@
 # Dotfiles
-Vim Neovim
-Regolith xresources
+Vim/Neovim
 Alacritty 
 zshrc
 tmux
