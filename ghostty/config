@@ -1,0 +1,5 @@
+theme = Jellybeans
+font-family = "Iosevka Nerd Font"
+font-size = 13
+window-save-state = always
+keybind = ctrl+h=toggle_window_decorations
