@@ -1,5 +1,6 @@
-theme = Jellybeans
-font-family = "Iosevka Nerd Font"
+theme = no-clown-fiesta
+font-family = "Iosevka NFP"
 font-size = 13
 window-save-state = always
-keybind = ctrl+h=toggle_window_decorations
+keybind = ctrl+shift+h=toggle_window_decorations
+window-decoration = false
