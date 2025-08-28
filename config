@@ -1,0 +1,6 @@
+theme = grayscale
+font-family = "Iosevka NFP"
+font-size = 15
+window-save-state = always
+keybind = ctrl+shift+h=toggle_window_decorations
+window-decoration = true
