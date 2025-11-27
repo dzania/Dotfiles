@@ -1,0 +1,122 @@
+// Zed settings
+//
+// For information on how to configure Zed, see the Zed
+// documentation: https://zed.dev/docs/configuring-zed
+//
+// To see all of Zed's default settings without changing your
+// custom settings, run the `open default settings` command
+// from the command palette or from `Zed` application menu.
+{
+  "icon_theme": "Material Icon Theme",
+  "features": {
+    "edit_prediction_provider": "zed"
+  },
+  "ssh_connections": [
+    {
+      "host": "5.9.154.78",
+      "username": "artur",
+      "projects": [
+        {
+          "paths": ["~/epibator"]
+        }
+      ],
+      "nickname": "compiler1"
+    },
+    {
+      "host": "5.9.153.76",
+      "username": "artur",
+      "projects": [
+        {
+          "paths": ["~/epibator"]
+        }
+      ],
+      "nickname": "compiler3"
+    },
+    {
+      "host": "168.119.35.219",
+      "username": "artur",
+      "projects": [
+        {
+          "paths": ["/home/artur"]
+        },
+        {
+          "paths": ["/home/artur/epibator"]
+        }
+      ]
+    }
+  ],
+  "agent": {
+    "play_sound_when_agent_done": true,
+    "always_allow_tool_actions": true,
+    "default_model": {
+      "provider": "anthropic",
+      "model": "claude-sonnet-4-latest"
+    }
+  },
+
+  "theme": "Gruber Void Lite ⚫",
+  "ui_font_size": 16,
+  "buffer_font_size": 14,
+  "buffer_font_family": "Iosevka Nerd Font",
+  "vim_mode": true,
+  "vertical_scroll_margin": 20,
+  "relative_line_numbers": "enabled",
+  "tabs": {
+    "git_status": true
+  },
+  "inlay_hints": {
+    "enabled": true
+  },
+  "theme_overrides": {
+    "Gruber Void Lite ⚫": {
+      "syntax": {
+        "comment": {
+          "color": "ab3933"
+        },
+        "comment.doc": {
+          "color": "#ab3933"
+        },
+        "string": {
+          "color": "#448c27"
+        },
+        "keyword": {
+          "font_weight": 500,
+          "font_style": "normal"
+        },
+        "function": {
+          "font_weight": null,
+          "font_style": "normal",
+          "color": "#0934fa"
+        },
+        "function.special": {
+          "font_weight": null,
+          "color": "#0934fa",
+          "font_style": "normal"
+        },
+        "function.definition": {
+          "font_weight": null,
+          "color": "#0934fa",
+          "font_style": "normal"
+        },
+        "function.method": {
+          "font_weight": null,
+          "color": "#0934fa",
+          "font_style": "normal"
+        },
+        "function.special.definition": {
+          "font_weight": null,
+          "color": "#0934fa",
+          "font_style": "normal"
+        },
+        "enum": {
+          "font_weight": null,
+          "font_style": "normal"
+        },
+        "*": {
+          "font_style": "normal",
+          "font_weight": 500
+        }
+      }
+    }
+  }
+}
