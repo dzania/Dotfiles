@@ -5,25 +5,13 @@ if status is-interactive
 
     # ── PATH ─────────────────────────────────────────────────
     fish_add_path $HOME/.local/bin
-    fish_add_path $HOME/Library/pnpm
-    fish_add_path /usr/local/opt/libpq/bin
-    fish_add_path /opt/homebrew/bin
-    fish_add_path /opt/homebrew/opt/llvm/bin
-    fish_add_path /opt/homebrew/opt/ruby/bin
-    fish_add_path /opt/homebrew/opt/libpq/bin
     fish_add_path $HOME/.opencode/bin
-    fish_add_path (brew --prefix openssl@3)/bin
     fish_add_path (go env GOPATH)/bin
 
     # ── Environment variables ────────────────────────────────
     set -gx BAT_THEME "gruvbox-light"
-    set -gx PNPM_HOME "$HOME/Library/pnpm"
-    set -gx SDKROOT (xcrun --show-sdk-path)
     set -gx LUMINOVO_NUM_CPUS 12
     set -gx LUMINOVO_RUST_TOOLCHAIN nightly
-    set -gx LDFLAGS "-L"(brew --prefix)"/lib"
-    set -gx CPPFLAGS "-I"(brew --prefix)"/include"
-    set -gx LIBRARY_PATH "/opt/homebrew/opt/libpq/lib:$LIBRARY_PATH"
 
     # ── Git abbreviations ────────────────────────────────────
     abbr -a g git
