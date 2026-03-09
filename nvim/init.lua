@@ -12,7 +12,6 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
-
 -- [[ Configure plugins ]]
 require('lazy').setup({
   -- NOTE: First, some plugins that don't require any configuration
@@ -65,40 +64,31 @@ require('lazy').setup({
     -- Set lualine as statusline
     'nvim-lualine/lualine.nvim',
     -- See `:help lualine.txt`
-    opts = {
-      options = {
-        icons_enabled = false,
-        theme = 'auto',
-        component_separators = '|',
-        section_separators = '',
-      },
-    },
   },
 
   {
     -- Add indentation guides even on blank lines
     'lukas-reineke/indent-blankline.nvim',
-    -- Enable `lukas-reineke/indent-blankline.nvim`
     main = 'ibl',
-    opts = {
-      scope = {
-        enabled = true,
-        show_start = false,
-        show_end = false,
-        injected_languages = false,
-        highlight = { "Function", "Label" },
-        priority = 500,
-      }
-    },
   },
 
   -- "gc" to comment visual regions/lines
   { 'numToStr/Comment.nvim',  opts = {} },
 
+  -- Useful plugin to show you pending keybinds.
+  {
+    'folke/which-key.nvim',
+    event = 'VimEnter',
+    opts = {
+      icons = { mappings = false },
+      delay = 400,
+    },
+  },
+
   -- Fuzzy Finder (files, lsp, etc)
   {
     'nvim-telescope/telescope.nvim',
-    branch = '0.1.x',
+    tag = '0.2.1',
     dependencies = {
       'nvim-lua/plenary.nvim',
       -- Fuzzy Finder Algorithm which requires local dependencies to be built.
@@ -123,6 +113,21 @@ require('lazy').setup({
       'nvim-treesitter/nvim-treesitter-textobjects',
     },
     build = ':TSUpdate',
+    opts = {
+      ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim', 'bash' },
+      auto_install = true,
+      sync_install = false,
+      ignore_install = {},
+      modules = {},
+      highlight = { enable = true },
+      indent = { enable = true },
+      incremental_selection = {
+        enable = true,
+      },
+    },
+    config = function(_, opts)
+      require('nvim-treesitter.configs').setup(opts)
+    end,
   },
 
   { import = 'custom.plugins' },
@@ -209,7 +214,7 @@ require('telescope').setup {
     sorting_strategy = "descending",
     layout_strategy = "horizontal",
     layout_defaults = {},
-    layout_config = { preview_width = 0.5, width = 0.95, height = 0.95 },
+    layout_config = { horizontal = { preview_width = 0.5 }, width = 0.95, height = 0.95 },
     file_ignore_patterns = {},
     path_display = { "truncate" },
     winblend = 0,
@@ -290,107 +295,91 @@ vim.keymap.set('n', '<leader>sG', ':LiveGrepGitRoot<cr>', { desc = '[S]earch by 
 vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
 vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = '[S]earch [R]esume' })
 
--- [[ Configure Treesitter ]]
-vim.defer_fn(function()
-  require('nvim-treesitter.configs').setup {
-    ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim', 'bash' },
-    auto_install = true,
-    sync_install = false,
-    -- List of parsers to ignore installing
-    ignore_install = {},
-    -- You can specify additional Treesitter modules here: -- For example: -- playground = {--enable = true,-- },
-    modules = {},
-    highlight = { enable = true },
-    indent = { enable = true },
-    incremental_selection = {
-      enable = true,
-    },
-  }
-end, 0)
+-- [[ which-key group labels ]]
+local wk = require('which-key')
+wk.add({
+  { '<leader>s', group = 'Search (Telescope)' },
+  { '<leader>g', group = 'Git' },
+  { '<leader>d', group = 'Document (LSP)' },
+  { '<leader>w', group = 'Workspace (LSP)' },
+  { '<leader>r', group = 'Rename' },
+  { '<leader>c', group = 'Code' },
+  { 'g',         group = 'Goto' },
+})
+
+
 
 -- [[ Configure LSP ]]
---  This function gets run when an LSP connects to a particular buffer.
-local on_attach = function(_, bufnr)
-  local nmap = function(keys, func, desc)
-    if desc then
-      desc = 'LSP: ' .. desc
+-- LSP keymaps (set up when any LSP attaches to a buffer)
+vim.api.nvim_create_autocmd('LspAttach', {
+  group = vim.api.nvim_create_augroup('UserLspConfig', { clear = true }),
+  callback = function(ev)
+    local bufnr = ev.buf
+    local nmap = function(keys, func, desc)
+      if desc then
+        desc = 'LSP: ' .. desc
+      end
+      vim.keymap.set('n', keys, func, { buffer = bufnr, desc = desc })
     end
 
-    vim.keymap.set('n', keys, func, { buffer = bufnr, desc = desc })
-  end
+    nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
+    nmap('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
 
-  nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
-  nmap('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
+    nmap('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
+    nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
+    nmap('gI', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
 
-  nmap('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
-  nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
-  nmap('gI', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
-  nmap('<leader>D', require('telescope.builtin').lsp_type_definitions, 'Type [D]efinition')
-  nmap('<leader>ds', require('telescope.builtin').lsp_document_symbols, '[D]ocument [S]ymbols')
-  nmap('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
+    nmap('<leader>D', require('telescope.builtin').lsp_type_definitions, 'Type [D]efinition')
+    nmap('<leader>ds', require('telescope.builtin').lsp_document_symbols, '[D]ocument [S]ymbols')
+    nmap('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
 
-  -- See `:help K` for why this keymap
-  nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
-  nmap('<C-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
+    nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
+    nmap('<C-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
 
-  -- Lesser used LSP functionality
-  nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
-  nmap('<leader>wa', vim.lsp.buf.add_workspace_folder, '[W]orkspace [A]dd Folder')
-  nmap('<leader>wr', vim.lsp.buf.remove_workspace_folder, '[W]orkspace [R]emove Folder')
-  nmap('<leader>wl', function()
-    print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-  end, '[W]orkspace [L]ist Folders')
+    nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
+    nmap('<leader>wa', vim.lsp.buf.add_workspace_folder, '[W]orkspace [A]dd Folder')
+    nmap('<leader>wr', vim.lsp.buf.remove_workspace_folder, '[W]orkspace [R]emove Folder')
+    nmap('<leader>wl', function()
+      print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+    end, '[W]orkspace [L]ist Folders')
 
-  -- Create a command `:Format` local to the LSP buffer
-  vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
-    vim.lsp.buf.format()
-  end, { desc = 'Format current buffer with LSP' })
-end
+    vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
+      vim.lsp.buf.format()
+    end, { desc = 'Format current buffer with LSP' })
+  end,
+})
 
--- mason-lspconfig requires that these setup functions are called in this order
--- before setting up the servers.
+-- Mason setup
 require('mason').setup()
-require('mason-lspconfig').setup()
-local servers = {
-  clangd = {},
-  -- gopls = {},
-  -- pyright = {},
-  rust_analyzer = {},
-  -- tsserver = {},
-  -- html = { filetypes = { 'html', 'twig', 'hbs'} },
-
-  lua_ls = {
-    Lua = {
-      workspace = { checkThirdParty = false },
-      telemetry = { enable = false },
-    },
-  },
+require('mason-lspconfig').setup {
+  ensure_installed = { 'clangd', 'rust_analyzer', 'lua_ls' },
 }
-
--- Setup neovim lua configuration
-require('neodev').setup()
 
 -- nvim-cmp supports additional completion capabilities, so broadcast that to servers
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 
--- Ensure the servers above are installed
-local mason_lspconfig = require 'mason-lspconfig'
+-- Configure each LSP server using the new vim.lsp.config API
+vim.lsp.config('clangd', {
+  capabilities = capabilities,
+})
 
-mason_lspconfig.setup {
-  ensure_installed = vim.tbl_keys(servers),
-}
+vim.lsp.config('rust_analyzer', {
+  capabilities = capabilities,
+})
 
-mason_lspconfig.setup_handlers {
-  function(server_name)
-    require('lspconfig')[server_name].setup {
-      capabilities = capabilities,
-      on_attach = on_attach,
-      settings = servers[server_name],
-      filetypes = (servers[server_name] or {}).filetypes,
-    }
-  end,
-}
+vim.lsp.config('lua_ls', {
+  capabilities = capabilities,
+  settings = {
+    Lua = {
+      workspace = { checkThirdParty = false },
+      telemetry = { enable = false },
+    },
+  },
+})
+
+-- Enable all configured servers
+vim.lsp.enable({ 'clangd', 'rust_analyzer', 'lua_ls' })
 
 -- [[ Configure nvim-cmp ]]
 -- See `:help cmp`
@@ -546,39 +535,27 @@ require("ibl").setup({
   indent = {
     char = "▏", -- This is a slightly thinner char than the default one, check :help ibl.config.indent.char
   },
-  scope = {
-    enabled = true,
-    show_start = false,
-    show_end = false,
-    injected_languages = false,
-    highlight = {},
-    priority = 500,
-  }
 })
 
 
 -- Diagnostic
-vim.api.nvim_create_autocmd("CursorHold", {
-  buffer = bufnr,
-  callback = function()
-    local opts = {
-      focusable = true,
-      close_events = { "BufLeave", "CursorMoved", "InsertEnter", "FocusLost" },
-      border = 'rounded',
-      source = 'always',
-      prefix = ' ',
-      scope = 'cursor',
-    }
-    vim.diagnostic.open_float(nil, opts)
-  end
-})
 vim.diagnostic.config({
   virtual_text = false,
   signs = true,
   underline = true,
   update_in_insert = false,
   severity_sort = false,
-
 })
-vim.o.updatetime = 250
-vim.cmd [[autocmd! CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, {focus=false})]]
+
+vim.api.nvim_create_autocmd("CursorHold", {
+  callback = function()
+    vim.diagnostic.open_float(nil, {
+      focusable = false,
+      close_events = { "BufLeave", "CursorMoved", "InsertEnter", "FocusLost" },
+      border = 'rounded',
+      source = 'always',
+      prefix = ' ',
+      scope = 'cursor',
+    })
+  end,
+})
