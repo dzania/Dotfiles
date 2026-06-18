@@ -1,0 +1,61 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+[[ -n "${ZELLIJ:-}" ]] || exit 0
+
+zellij_bin="${ZELLIJ_BIN:-zellij}"
+state_dir="${XDG_STATE_HOME:-$HOME/.local/state}/zellij-auto-tab-name"
+
+command -v "$zellij_bin" >/dev/null 2>&1 || exit 0
+command -v jq >/dev/null 2>&1 || exit 0
+
+mkdir -p "$state_dir"
+
+tab_json="$("$zellij_bin" action list-tabs --json --state 2>/dev/null)" || exit 0
+
+active_tab="$(
+    printf '%s' "$tab_json" |
+        jq -er '
+            .[] |
+            select(
+                .active == true or
+                .is_active == true or
+                .state.active == true or
+                .state.is_active == true
+            )
+        ' 2>/dev/null
+)" || exit 0
+
+tab_id="$(printf '%s' "$active_tab" | jq -er '.id // .tab_id // .position' 2>/dev/null)" || exit 0
+current_name="$(printf '%s' "$active_tab" | jq -r '.name // ""' 2>/dev/null)"
+
+dir_name="$(basename "$PWD")"
+desired_name="${dir_name//[[:space:].:]/_}"
+desired_name="$(printf '%s' "$desired_name" | tr -cd '[:alnum:]_-')"
+[[ -n "$desired_name" ]] || desired_name="home"
+
+auto_file="$state_dir/$tab_id.auto"
+manual_file="$state_dir/$tab_id.manual"
+
+[[ -e "$manual_file" ]] && exit 0
+
+if [[ -e "$auto_file" ]]; then
+    last_auto="$(cat "$auto_file" 2>/dev/null || true)"
+    if [[ -n "$last_auto" && "$current_name" != "$last_auto" ]]; then
+        printf '%s\n' "$current_name" >"$manual_file"
+        exit 0
+    fi
+else
+    case "$current_name" in
+        ""|"main"|"Tab #"*|"$desired_name") ;;
+        *) exit 0 ;;
+    esac
+fi
+
+[[ "$current_name" == "$desired_name" ]] && {
+    printf '%s\n' "$desired_name" >"$auto_file"
+    exit 0
+}
+
+"$zellij_bin" action rename-tab "$desired_name" >/dev/null 2>&1 || exit 0
+printf '%s\n' "$desired_name" >"$auto_file"

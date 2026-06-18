@@ -1,0 +1,105 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+zellij_bin="${ZELLIJ_BIN:-zellij}"
+fzf_bin="${FZF_BIN:-fzf}"
+
+die() {
+    printf '%s\n' "$*" >&2
+    exit 1
+}
+
+session_name_for_dir() {
+    local dir_name
+    dir_name="$(basename "$1")"
+    dir_name="${dir_name//[[:space:].:]/_}"
+    dir_name="$(printf '%s' "$dir_name" | tr -cd '[:alnum:]_-')"
+
+    if [[ -z "$dir_name" ]]; then
+        printf 'home'
+    else
+        printf '%s' "$dir_name"
+    fi
+}
+
+emit_candidate_dirs() {
+    local roots=()
+    local depths=()
+
+    add_root() {
+        local root="$1"
+        local depth="$2"
+
+        [[ -d "$root" ]] || return 0
+
+        for existing in "${roots[@]}"; do
+            [[ "$existing" == "$root" ]] && return 0
+        done
+
+        roots+=("$root")
+        depths+=("$depth")
+    }
+
+    add_root "$HOME" 1
+    add_root "$HOME/dev" 5
+    add_root "$HOME/d" 6
+    add_root "$HOME/work" 5
+    add_root "$HOME/Code" 4
+    add_root "$HOME/Developer" 4
+    add_root "$HOME/Documents/kody" 4
+    add_root "$HOME/teonite" 4
+
+    for index in "${!roots[@]}"; do
+        find "${roots[$index]}" \
+            -mindepth 1 \
+            -maxdepth "${depths[$index]}" \
+            \( \
+                -name .cache -o \
+                -name .cargo -o \
+                -name .git -o \
+                -name .local -o \
+                -name .npm -o \
+                -name .rustup -o \
+                -name Library -o \
+                -name node_modules -o \
+                -name target \
+            \) -prune -o \
+            -type d \
+            -print 2>/dev/null
+    done | awk '!seen[$0]++' | sed "s#^$HOME#~#"
+}
+
+if ! command -v "$fzf_bin" >/dev/null 2>&1; then
+    die "fzf not found"
+fi
+
+if ! command -v "$zellij_bin" >/dev/null 2>&1; then
+    die "zellij not found"
+fi
+
+if [[ $# -gt 0 ]]; then
+    selected="$1"
+else
+    selected="$(
+        emit_candidate_dirs |
+            "$fzf_bin" \
+                --prompt='zellij session> ' \
+                --height=80% \
+                --border \
+                --reverse \
+                --tiebreak=begin,index
+    )" || exit 0
+fi
+
+[[ -n "${selected:-}" ]] || exit 0
+
+selected="${selected/#\~/$HOME}"
+selected="$(cd "$selected" 2>/dev/null && pwd -P)" || die "directory not found: $selected"
+
+session_name="$(session_name_for_dir "$selected")"
+
+if [[ -n "${ZELLIJ:-}" ]]; then
+    "$zellij_bin" action switch-session --cwd "$selected" "$session_name"
+else
+    exec "$zellij_bin" attach --create "$session_name" options --default-cwd "$selected"
+fi

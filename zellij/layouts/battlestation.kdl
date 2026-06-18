@@ -2,7 +2,43 @@ layout {
     default_tab_template {
         children
         pane size=1 borderless=true {
-            plugin location="compact-bar"
+            plugin location="https://github.com/dj95/zjstatus/releases/latest/download/zjstatus.wasm" {
+                format_left   "{mode}"
+                format_center "{tabs}"
+                format_right  "{swap_layout}"
+                format_space  "#[bg=#282828] "
+
+                border_enabled "false"
+                hide_frame_for_single_pane "false"
+                format_hide_on_overlength "true"
+                format_precedence "clr"
+
+                mode_normal       "#[bg=#282828,fg=#d5c4a1,bold] NORMAL "
+                mode_locked       "#[bg=#282828,fg=#d5c4a1,bold] LOCKED "
+                mode_resize       "#[bg=#282828,fg=#d5c4a1,bold] RESIZE "
+                mode_pane         "#[bg=#282828,fg=#d5c4a1,bold] PANE "
+                mode_tab          "#[bg=#282828,fg=#d5c4a1,bold] TAB "
+                mode_scroll       "#[bg=#282828,fg=#d5c4a1,bold] SCROLL "
+                mode_enter_search "#[bg=#282828,fg=#d5c4a1,bold] SEARCH "
+                mode_search       "#[bg=#282828,fg=#d5c4a1,bold] SEARCH "
+                mode_rename_tab   "#[bg=#282828,fg=#d5c4a1,bold] RENAME "
+                mode_rename_pane  "#[bg=#282828,fg=#d5c4a1,bold] RENAME "
+                mode_session      "#[bg=#282828,fg=#d5c4a1,bold] SESSION "
+                mode_move         "#[bg=#282828,fg=#d5c4a1,bold] MOVE "
+                mode_prompt       "#[bg=#282828,fg=#d5c4a1,bold] PROMPT "
+                mode_tmux         "#[bg=#282828,fg=#d5c4a1,bold] TMUX "
+
+                swap_layout_format "#[bg=#282828,fg=#d5c4a1,bold] {name} "
+                swap_layout_hide_if_empty "true"
+
+                tab_normal              "#[bg=#282828,fg=#928374] {name} "
+                tab_normal_fullscreen   "#[bg=#282828,fg=#928374] {name}[] "
+                tab_normal_sync         "#[bg=#282828,fg=#928374] {name}<> "
+                tab_active              "#[bg=#3c3836,fg=#ebdbb2,bold] {name} "
+                tab_active_fullscreen   "#[bg=#3c3836,fg=#ebdbb2,bold] {name}[] "
+                tab_active_sync         "#[bg=#3c3836,fg=#ebdbb2,bold] {name}<> "
+                tab_separator           "#[bg=#282828] "
+            }
         }
     }
 
