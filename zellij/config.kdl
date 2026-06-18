@@ -75,14 +75,17 @@ keybinds clear-defaults=true {
     scroll {
         bind "s" { SwitchToMode "Normal"; }
         bind "e" { EditScrollback; SwitchToMode "Locked"; }
-        bind "f" { SwitchToMode "EnterSearch"; SearchInput 0; }
+        bind "/" "f" { SwitchToMode "EnterSearch"; SearchInput 0; }
+        bind "q" { SwitchToMode "Locked"; }
         bind "Ctrl c" { ScrollToBottom; SwitchToMode "Locked"; }
         bind "j" "Down" { ScrollDown; }
         bind "k" "Up" { ScrollUp; }
+        bind "g" { ScrollToTop; }
+        bind "G" { ScrollToBottom; }
         bind "Ctrl f" "PageDown" "Right" "l" { PageScrollDown; }
         bind "Ctrl b" "PageUp" "Left" "h" { PageScrollUp; }
-        bind "d" { HalfPageScrollDown; }
-        bind "u" { HalfPageScrollUp; }
+        bind "Ctrl d" "d" { HalfPageScrollDown; }
+        bind "Ctrl u" "u" { HalfPageScrollUp; }
         bind "Alt left" { MoveFocusOrTab "left"; SwitchToMode "locked"; }
         bind "Alt down" { MoveFocus "down"; SwitchToMode "locked"; }
         bind "Alt up" { MoveFocus "up"; SwitchToMode "locked"; }
@@ -96,12 +99,14 @@ keybinds clear-defaults=true {
         bind "Ctrl c" { ScrollToBottom; SwitchToMode "Locked"; }
         bind "j" "Down" { ScrollDown; }
         bind "k" "Up" { ScrollUp; }
+        bind "g" { ScrollToTop; }
+        bind "G" { ScrollToBottom; }
         bind "Ctrl f" "PageDown" "Right" "l" { PageScrollDown; }
         bind "Ctrl b" "PageUp" "Left" "h" { PageScrollUp; }
-        bind "d" { HalfPageScrollDown; }
-        bind "u" { HalfPageScrollUp; }
+        bind "Ctrl d" "d" { HalfPageScrollDown; }
+        bind "Ctrl u" "u" { HalfPageScrollUp; }
         bind "n" { Search "down"; }
-        bind "p" { Search "up"; }
+        bind "N" "p" { Search "up"; }
         bind "c" { SearchToggleOption "CaseSensitivity"; }
         bind "w" { SearchToggleOption "Wrap"; }
         bind "o" { SearchToggleOption "WholeWord"; }
